@@ -39,7 +39,7 @@ def scheduleImport():
         row[1] = int(row[1])  
         row[2] = int(row[2]) - 1
         row[3] = int(row[3]) - 1
-        print(row)
+     
         pathData.append(row)
 
     return pathData
@@ -152,8 +152,7 @@ def main():
     
 
 
-    numCars=2       
-    print(" Solution")
+    numCars = int(input("Enter no of cars:"))    
     calcRun(numCars)
     
 
@@ -173,7 +172,7 @@ def calcRun(numCars):
     network = roadInput()
     requests = scheduleImport()
 
-    startT = time.time()                              
+                              
     for req in requests:
         minTime = 2147483647
         for i in range(numCars):                     
@@ -187,19 +186,17 @@ def calcRun(numCars):
         listCars[minCar].dropTime = req[1] + minTime + travelTime
         listCars[minCar].start = req[2]
         listCars[minCar].end = req[3]
-        listCars[minCar].requests.append(req[0])
+        
     
 
-    print("\nTotal wait time is: ",totalTime)
-    for car in listCars:
-        print("Requests fulfilled by car no {} ".format(car.identity))
-        for req in car.requests:
-            print(req)
+   
+    
     l = len(drivenBy)
     print("request no  driven by")
     for i in range(0,l):
         
-        print(requests[i][0],drivenBy[i])
+        print("    {}          {}    ".format(requests[i][0],drivenBy[i]))
+    print("\nTotal wait time is: ",totalTime)
 
 
     
