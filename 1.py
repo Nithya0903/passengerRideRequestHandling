@@ -1,22 +1,20 @@
 import csv
 import time
 
-printB = False  # output print for solution
+printB = False 
 
 
 global dynMemory
 dynMemory = []
 
 
-#
-# Importing Network#
 
 def roadInput():
-    pathMatrix = open("./newnetwork.csv", 'r')  # open file in read form
-    matrixReader = csv.reader(pathMatrix, delimiter=',')  # pull data with , delimiter
+    pathMatrix = open("./newnetwork.csv", 'r')                                    
+    matrixReader = csv.reader(pathMatrix, delimiter=',')
     pathData = []
 
-    i = 0                                               # Move data in list of lists
+    i = 0                                            
     for row in matrixReader:
         for val in row:
             row[i] = int(row[i])
@@ -29,90 +27,85 @@ def roadInput():
     return pathData
 
 
-#
-# Schedule Import Start#
 
 def scheduleImport():
-    pathMatrix = open('./newrequest.csv', 'r')  # open file in read form
-    matrixReader = csv.reader(pathMatrix, delimiter=',')  # pull data with , delimeter
+    pathMatrix = open('./indexed_req.csv', 'r')  
+    matrixReader = csv.reader(pathMatrix, delimiter=',')  
     pathData = []
-    # Build request list
     i = 0
 
-    for row in matrixReader:  # locations range from 1-50
-        row[0] = int(row[0])  # adjusting to 0-49
-        row[1] = int(row[1]) - 1
+    for row in matrixReader: 
+        row[0] = int(row[0])
+        row[1] = int(row[1])  
         row[2] = int(row[2]) - 1
+        row[3] = int(row[3]) - 1
+        print(row)
         pathData.append(row)
 
-    #print('Schedule Successfulling Stored')
     return pathData
 
 
-#
+          
 
 
-#
-#  Car Class#
-#
-class Car:  # Class with data such as...
+          
+          
+class Car: 
 
     def __init__(self, identify):
-        self.start = 0  # Location of pickup(Not useful currently)
-        self.end = 0  # Location of drop off
-        self.dropTime = 0  # Time of current delivery dropoff
-        self.identity = identify  # Identifier for car
-        self.requests = [] #the requests this particular car catered
+        self.start = 0 
+        self.end = 0  
+        self.dropTime = 0  
+        self.identity = identify  
+        self.requests = [] 
 
 
-def timeFunc(grid, car, request):  # Determine the time to pick up passenger
-    pathTime = dijkstras(grid, car.end, int(request[1]))
-    if (car.dropTime > request[0]):  # If currently busy
-        pathTime = pathTime + car.dropTime - request[0]  # Include time to drop off current pasenger
+def timeFunc(grid, car, request):  
+    pathTime = dijkstras(grid, car.end, int(request[2]))
+    if (car.dropTime > request[1]):  
+        pathTime = pathTime + car.dropTime - request[1]  
     return pathTime
 
 
-#
+          
 
 
-#
-# Dijkstras#
-#
+          
+
 def dijkstras(network, start, end):
     check, distFrom = dynCheck(start, end)
-    if  check:  # If dynamic storage is available check whehter path has been traversed before
+    if  check:  
         answer = distFrom
     else:
-        # store more fastest time to each point from a chosen point
         distFrom = []
         finalizedSet = []
 
         count = 0
-        while count < len(network):  # Currrently all dist. are unknown
-            distFrom.append(float('inf'))  # setting inf. distance away
-            finalizedSet.append(False)  # set false to confirmed shortest distance
+        while count < len(network):  
+            distFrom.append(float('inf'))  
             count = count + 1
-        distFrom[start] = 0  # distance to starting point is now 0
+        distFrom[start] = 0  
 
         count = 0
-        while count < (len(network)):  # find the shortest path to all points
-            minimum = minDistance(distFrom, finalizedSet)  # pick vertex shortest distance from the column
-            finalizedSet[minimum] = True  # set picked vertex to True
+        while count < (len(network)):  
+            minimum = minDistance(distFrom, finalizedSet) 
+            finalizedSet[minimum] = True  
             j = 0
-            while (j < len(network)):  # if a shorter distance is found, update val of finalizedSet
+            while (j < len(network)):  
                 if (finalizedSet[j] == False and network[minimum][j] and distFrom[minimum] != 2147483647 and distFrom[minimum] + network[minimum][j] < distFrom[j]):
                     distFrom[j] = distFrom[minimum] + network[minimum][j]
                 j = j + 1
+
             count = count + 1
         answer = printSolution(distFrom, start, end)
     return answer
 
 
 def minDistance(distFrom, finalizedSet):
-    min = 2147483647  # Set min to max of int so its not accidentally chosen
+    min = 2147483647  
     count = 0
     minIndex = 0
-    while (count < roadSize):  # Chose minimum distance
+    while (count < roadSize):  
         if (finalizedSet[count] == False and distFrom[count] <= min):
             min = distFrom[count]
             minIndex = count
@@ -121,7 +114,7 @@ def minDistance(distFrom, finalizedSet):
 
 
 def printSolution(distFrom, start, end):
-    # print("Vertex Distance from source \n")
+   
     counter5 = 0
     while (counter5 < roadSize):
         if printB:
@@ -131,18 +124,20 @@ def printSolution(distFrom, start, end):
 
     distToEnd = distFrom[end]
     return distToEnd
-#
+          
 
 
-###############################################
-# Dynamic Val Check
-###############################################
+
 def dynCheck(start, end):
-    for val in dynMemory:                               #Go through all prev. paths and check if done before
+    for val in dynMemory:                               
         if ((val[0] == start and val[1] == end) or (val[1]==start and val[0]==end)):
             return True, val[2]
     return False, 0
+          
 
+          
+
+          
 def carUpdate(car, end, req):
     travelTime = dijkstras(network, car.end, end)
     car.dropTime = req[0] + travelTime
@@ -150,49 +145,58 @@ def carUpdate(car, end, req):
     car.end = end
 
 
-
 def main():
     
-    numCars=2       #Define the number of cars
+
+
+    numCars=2       
     print(" Solution")
     calcRun(numCars)
     
 
 
 
-#
-# Scheduling#
-#
+
 def calcRun(numCars):
     global network
-    #numCars = 2                                        #This value defines the number of cars
-    listCars = []                                       #Define dynamic # cars variables
+  
+    drivenBy =[]                                       
+    listCars = []                                       
     for i in range(numCars):
         listCars.append(Car(i))
 
     totalTime = 0
-    #Val to store total wait time
+  
     network = roadInput()
     requests = scheduleImport()
 
-    startT = time.time()                                #Count time to run program
+    startT = time.time()                              
     for req in requests:
         minTime = 2147483647
-        for i in range(numCars):                        #Choose car which can arrive fastest
+        for i in range(numCars):                     
             pickupTime = timeFunc(network, listCars[i], req)
             if pickupTime < minTime:
                 minTime = pickupTime
                 minCar = i
-
-        travelTime = dijkstras(network, req[1], req[2]) 
-        #Update car locations and trip times
+        drivenBy.append(minCar)
+        travelTime = dijkstras(network, req[2], req[3]) 
         totalTime = totalTime + minTime
-        listCars[minCar].dropTime = req[0] + minTime + travelTime
-        listCars[minCar].start = req[1]
-        listCars[minCar].end = req[2]
+        listCars[minCar].dropTime = req[1] + minTime + travelTime
+        listCars[minCar].start = req[2]
+        listCars[minCar].end = req[3]
+        listCars[minCar].requests.append(req[0])
     
 
     print("\nTotal wait time is: ",totalTime)
+    for car in listCars:
+        print("Requests fulfilled by car no {} ".format(car.identity))
+        for req in car.requests:
+            print(req)
+    l = len(drivenBy)
+    print("request no  driven by")
+    for i in range(0,l):
+        
+        print(requests[i][0],drivenBy[i])
 
 
     
