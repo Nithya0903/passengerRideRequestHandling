@@ -173,7 +173,11 @@ def calcRun(numCars):
     network = roadInput()
     requests = scheduleImport()
 
+<<<<<<< HEAD
     startT = time.time()                              
+=======
+    startT = time.time()                                #Count time to run program
+>>>>>>> a537069f04db666c39275def425d440e24b6409b
     for req in requests:
         minTime = 2147483647
         for i in range(numCars):                     
@@ -184,10 +188,16 @@ def calcRun(numCars):
         drivenBy.append(minCar)
         travelTime = dijkstras(network, req[2], req[3]) 
         totalTime = totalTime + minTime
+<<<<<<< HEAD
         listCars[minCar].dropTime = req[1] + minTime + travelTime
         listCars[minCar].start = req[2]
         listCars[minCar].end = req[3]
         listCars[minCar].requests.append(req[0])
+=======
+        listCars[minCar].dropTime = req[0] + minTime + travelTime
+        listCars[minCar].start = req[1]
+        listCars[minCar].end = req[2]
+>>>>>>> a537069f04db666c39275def425d440e24b6409b
     
 
     print("\nTotal wait time is: ",totalTime)
