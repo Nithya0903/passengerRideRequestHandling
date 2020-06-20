@@ -49,8 +49,9 @@ def scheduleImport():
 
 
           
+
           
-class Car: 
+class Car:
 
     def __init__(self, identify):
         self.start = 0 
@@ -60,7 +61,7 @@ class Car:
         self.requests = [] 
 
 
-def timeFunc(grid, car, request):  
+def timeFunc(grid, car, request): 
     pathTime = dijkstras(grid, car.end, int(request[2]))
     if (car.dropTime > request[1]):  
         pathTime = pathTime + car.dropTime - request[1]  
@@ -72,23 +73,26 @@ def timeFunc(grid, car, request):
 
           
 
+          
 def dijkstras(network, start, end):
     check, distFrom = dynCheck(start, end)
     if  check:  
         answer = distFrom
     else:
+       
         distFrom = []
         finalizedSet = []
 
         count = 0
         while count < len(network):  
             distFrom.append(float('inf'))  
+            finalizedSet.append(False)  
             count = count + 1
         distFrom[start] = 0  
 
         count = 0
         while count < (len(network)):  
-            minimum = minDistance(distFrom, finalizedSet) 
+            minimum = minDistance(distFrom, finalizedSet)  
             finalizedSet[minimum] = True  
             j = 0
             while (j < len(network)):  
@@ -104,7 +108,6 @@ def dijkstras(network, start, end):
 def minDistance(distFrom, finalizedSet):
     min = 2147483647  
     count = 0
-    minIndex = 0
     while (count < roadSize):  
         if (finalizedSet[count] == False and distFrom[count] <= min):
             min = distFrom[count]
