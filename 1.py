@@ -175,7 +175,6 @@ def calcRun(numCars):
     network = roadInput()
     requests = scheduleImport()
 
-    startT = time.time()                                #Count time to run program
     for req in requests:
         minTime = 2147483647
         for i in range(numCars):                        #Choose car which can arrive fastest
@@ -190,7 +189,8 @@ def calcRun(numCars):
         listCars[minCar].dropTime = req[0] + minTime + travelTime
         listCars[minCar].start = req[1]
         listCars[minCar].end = req[2]
-    
+        print('The request - request time :',req[0],' from NODE :',req[1],' to :',req[2],' took ',minTime, 'min to be served and was served by ',minCar)
+
 
     print("\nTotal wait time is: ",totalTime)
 
